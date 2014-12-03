@@ -3,6 +3,7 @@ package net.hostsharing.admin.example;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
@@ -18,8 +19,22 @@ public class Main {
 			config.setEnabledForExtensions(true);
 			final XmlRpcClient client = new XmlRpcClient();
 			client.setConfig(config);
-			Object rpcResult = client.execute("system.listMethods", new ArrayList());
-			System.out.println(rpcResult.getClass().getSimpleName());
+			
+//			Object rpcResult = client.execute("system.listMethods", new ArrayList());
+//			Object[] resultArray = (Object[]) rpcResult;
+//			for (Object obj : resultArray) {
+//				System.out.println(obj);
+//			}
+			
+			final ArrayList params = new ArrayList();
+			params.add("peh18-anton");
+			params.add("TICKET");
+			params.add(new HashMap());
+			Object[] rpcResult = (Object[]) client.execute("emailaddress.search", params);
+			for (Object resObject : rpcResult) {
+				System.out.println(resObject.getClass().getName());
+			}
+			
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
