@@ -18,7 +18,8 @@ public class Main {
 			config.setEnabledForExtensions(true);
 			final XmlRpcClient client = new XmlRpcClient();
 			client.setConfig(config);
-			client.execute("", new ArrayList());
+			Object rpcResult = client.execute("system.listMethods", new ArrayList());
+			System.out.println(rpcResult.getClass().getSimpleName());
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
