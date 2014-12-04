@@ -5,6 +5,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
@@ -31,13 +33,20 @@ public class Main {
 //				System.out.println(obj);
 //			}
 			
-			final ArrayList<Serializable> params = new ArrayList<Serializable>();
+			final List<Serializable> params = new ArrayList<Serializable>();
 			params.add(args[0]);
 			params.add(ticket);
 			params.add(new HashMap<Object, Object>());
 			Object[] rpcResult = (Object[]) client.execute("emailaddress.search", params);
 			for (Object resObject : rpcResult) {
-				System.out.println(resObject.getClass().getName());
+				@SuppressWarnings("unchecked")
+				Map<String, Serializable> emailaddressData = (Map<String, Serializable>) resObject;
+				System.out.print(emailaddressData.get("emailaddress") + " : ");
+				Object[] targets = (Object[]) emailaddressData.get("target");
+				for (Object target : targets) {
+					System.out.print(target + ",");
+				}
+				System.out.println();
 			}
 			
 		} catch (MalformedURLException e) {
