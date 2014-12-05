@@ -14,12 +14,18 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
 public class Main {
 
+	/** 
+	 * Do a single call to the hsadmin api.
+	 * @param args expects username and password
+	 */
 	public static void main(String[] args) {
 		try {
-			TicketService ticketService = new TicketService(args[0], args[1]);
-			String grantingTicket = ticketService.getGrantingTicket();
+			final String username = args[0];
+			final String password = args[1];
+			final TicketService ticketService = new TicketService(username, password);
+			final String grantingTicket = ticketService.getGrantingTicket();
 			
-			String ticket = ticketService.getServiceTicket(grantingTicket);
+			final String ticket = ticketService.getServiceTicket(grantingTicket);
 			
 			final XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 			config.setServerURL(new URL("https://config.hostsharing.net:443/hsar/xmlrpc/hsadmin"));
@@ -33,16 +39,17 @@ public class Main {
 //				System.out.println(obj);
 //			}
 			
-			final List<Serializable> params = new ArrayList<Serializable>();
-			params.add(args[0]);
-			params.add(ticket);
-			params.add(new HashMap<Object, Object>());
-			Object[] rpcResult = (Object[]) client.execute("emailaddress.search", params);
-			for (Object resObject : rpcResult) {
+			final List<Serializable> xmlRpcParamsList = new ArrayList<Serializable>();
+			xmlRpcParamsList.add(username);
+			xmlRpcParamsList.add(ticket);
+			final HashMap<String, Serializable> whereParamsMap = new HashMap<String, Serializable>();
+			xmlRpcParamsList.add(whereParamsMap);
+			final Object[] rpcResult = (Object[]) client.execute("emailaddress.search", xmlRpcParamsList);
+			for (final Object resObject : rpcResult) {
 				@SuppressWarnings("unchecked")
-				Map<String, Serializable> emailaddressData = (Map<String, Serializable>) resObject;
+				final Map<String, Serializable> emailaddressData = (Map<String, Serializable>) resObject;
 				System.out.print(emailaddressData.get("emailaddress") + " : ");
-				Object[] targets = (Object[]) emailaddressData.get("target");
+				final Object[] targets = (Object[]) emailaddressData.get("target");
 				for (Object target : targets) {
 					System.out.print(target + ",");
 				}

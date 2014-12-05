@@ -9,6 +9,13 @@ import java.net.URLEncoder;
 
 import javax.net.ssl.HttpsURLConnection;
 
+/**
+ * Helper for service tickets.
+ * Hostsharing uses the CAS authentication service to authenticate 
+ * users of hostsharing services. This class is used to create a 
+ * "ticket granting ticket" for a session and service ticket for 
+ * individual service calls. 
+ */
 public class TicketService {
 
 	final String user;
